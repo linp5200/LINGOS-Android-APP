@@ -1,7 +1,5 @@
-plugins {
-    id("com.android.application") version "8.2.0" apply false
-    id("org.jetbrains.kotlin.android") version "1.9.20" apply false
-}
+// 根项目构建文件
+// 插件版本统一在 settings.gradle.kts 的 pluginManagement 中管理
 tasks.register("clean", Delete::class) {
     delete(rootProject.buildDir)
 }

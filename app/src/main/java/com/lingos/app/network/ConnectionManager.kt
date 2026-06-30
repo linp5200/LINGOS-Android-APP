@@ -139,26 +139,27 @@ class ConnectionManager(private val context: Context) {
         val ws = webSocket ?: return false
         authCode = code
         val packet = Protocol.encodeAuthCode(code)
-        return ws.send(packet)
+        // 将 ByteArray 转换为 ByteString
+        return ws.send(ByteString.of(*packet))
     }
 
     fun sendConnectionCode(code: String): Boolean {
         val ws = webSocket ?: return false
         connectionCode = code
         val packet = Protocol.encodeConnectionCode(code)
-        return ws.send(packet)
+        return ws.send(ByteString.of(*packet))
     }
 
     fun sendHeartbeat(): Boolean {
         val ws = webSocket ?: return false
         val packet = Protocol.encodeHeartbeat()
-        return ws.send(packet)
+        return ws.send(ByteString.of(*packet))
     }
 
     fun sendCommand(command: String, params: Map<String, Any> = emptyMap()): Boolean {
         val ws = webSocket ?: return false
         val packet = Protocol.encodeCommand(command, params)
-        return ws.send(packet)
+        return ws.send(ByteString.of(*packet))
     }
 
     fun disconnect() {

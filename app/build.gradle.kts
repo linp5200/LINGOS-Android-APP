@@ -1,6 +1,6 @@
 plugins {
-    id("com.android.application") version "8.2.0"
-    id("org.jetbrains.kotlin.android") version "1.9.20"
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
 }
 
 android {
@@ -72,6 +72,10 @@ dependencies {
     // Room
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
+
+    // ====== 新增：Lifecycle + Compose 集成 ======
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")   // collectAsStateWithLifecycle
+    // 如果上述版本不匹配，可尝试 2.6.2，但 2.7.0 与现有版本一致
 
     // Testing
     testImplementation("junit:junit:4.13.2")

@@ -1,6 +1,6 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    id("com.android.application") version "8.2.0"          // 显式指定 AGP 版本
+    id("org.jetbrains.kotlin.android") version "1.9.20"   // 显式指定 Kotlin 版本
 }
 
 android {
@@ -58,7 +58,7 @@ dependencies {
     // Serialization
     implementation("com.google.code.gson:gson:2.10.1")
 
-    // Dependency Injection (Hilt)
+    // DI (Hilt)
     implementation("com.google.dagger:hilt-android:2.48")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
@@ -73,9 +73,8 @@ dependencies {
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
 
-    // ====== 新增：Lifecycle + Compose 集成 ======
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")   // collectAsStateWithLifecycle
-    // 如果上述版本不匹配，可尝试 2.6.2，但 2.7.0 与现有版本一致
+    // Lifecycle (collectAsStateWithLifecycle)
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
 
     // Testing
     testImplementation("junit:junit:4.13.2")

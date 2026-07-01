@@ -1,6 +1,6 @@
 plugins {
-    id("com.android.application") version "8.2.0"          // 显式指定 AGP 版本
-    id("org.jetbrains.kotlin.android") version "1.9.20"   // 显式指定 Kotlin 版本
+    id("com.android.application") version "8.2.0"
+    id("org.jetbrains.kotlin.android") version "1.9.20"
 }
 
 android {
@@ -46,7 +46,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.compose.material:material-icons-extended")  // 新增：解决 Icons.Default.Scan
 
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.7.5")
@@ -58,7 +58,7 @@ dependencies {
     // Serialization
     implementation("com.google.code.gson:gson:2.10.1")
 
-    // DI (Hilt)
+    // Dependency Injection (Hilt)
     implementation("com.google.dagger:hilt-android:2.48")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
@@ -73,7 +73,7 @@ dependencies {
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
 
-    // Lifecycle (collectAsStateWithLifecycle)
+    // Lifecycle + Compose (collectAsStateWithLifecycle)
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
 
     // Testing

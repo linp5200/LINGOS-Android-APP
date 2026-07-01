@@ -30,7 +30,11 @@ import com.lingos.app.ui.theme.LINGOSTypography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConnectScreen(viewModel: ConnectViewModel = hiltViewModel(), onConnected: () -> Unit, onBack: () -> Unit) {
+fun ConnectScreen(
+    viewModel: ConnectViewModel = hiltViewModel(),
+    onConnected: () -> Unit,
+    onBack: () -> Unit
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val selectedMethod by viewModel.selectedMethod.collectAsStateWithLifecycle()
     val address by viewModel.address.collectAsStateWithLifecycle()
@@ -47,7 +51,7 @@ fun ConnectScreen(viewModel: ConnectViewModel = hiltViewModel(), onConnected: ()
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(R.string.connect_title), style = LINGOSTypography.titleMedium, color = Color.White) },
+                title = { Text(stringResource(R.string.connect_title), style = LINGOSTypography.titleMedium, color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back), tint = Color.White)
@@ -67,10 +71,7 @@ fun ConnectScreen(viewModel: ConnectViewModel = hiltViewModel(), onConnected: ()
                 .background(LINGOSColors.Background)
                 .padding(horizontal = 20.dp, vertical = 16.dp)
         ) {
-            ConnectionMethodTabs(
-                selectedMethod = selectedMethod,
-                onMethodSelected = viewModel::selectMethod
-            )
+            ConnectionMethodTabs(selectedMethod, viewModel::selectMethod)
             Spacer(modifier = Modifier.height(20.dp))
 
             when (selectedMethod) {
@@ -104,7 +105,7 @@ fun ConnectScreen(viewModel: ConnectViewModel = hiltViewModel(), onConnected: ()
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
-            ConnectionStatusDisplay(state = state)
+            ConnectionStatusDisplay(state)
         }
     }
 }
@@ -132,18 +133,11 @@ private fun ConnectionMethodTabs(selectedMethod: ConnectionMethod, onMethodSelec
                 color = if (isSelected) LINGOSColors.AccentRed.copy(alpha = 0.2f) else Color.Transparent
             ) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 10.dp),
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = null,
-                        tint = if (isSelected) LINGOSColors.AccentRed else LINGOSColors.TextHint,
-                        modifier = Modifier.size(18.dp)
-                    )
+                    Icon(icon, null, tint = if (isSelected) LINGOSColors.AccentRed else LINGOSColors.TextHint, modifier = Modifier.size(18.dp))
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
                         text = when (method) {
@@ -197,9 +191,9 @@ private fun LANConnectionContent(
             OutlinedButton(
                 onClick = onScan,
                 modifier = Modifier.weight(1f),
-                colors = OutlinedButtonDefaults.outlinedButtonColors()
+                colors = ButtonDefaults.outlinedButtonColors()
             ) {
-                Icon(Icons.Default.Search, contentDescription = null, modifier = Modifier.size(18.dp))
+                Icon(Icons.Default.Search, null, modifier = Modifier.size(18.dp))
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(stringResource(R.string.connect_scan))
             }
@@ -214,7 +208,7 @@ private fun LANConnectionContent(
         }
         if (state is ConnectState.Scanning) {
             Spacer(modifier = Modifier.height(16.dp))
-            ScanResultList(devices = state.foundDevices, progress = state.progress)
+            ScanResultList(state.foundDevices, state.progress)
         }
     }
 }
@@ -273,12 +267,8 @@ private fun PublicConnectionContent(
         if (state is ConnectState.WaitingAuth) {
             Spacer(modifier = Modifier.height(12.dp))
             when (state.step) {
-                AuthStep.AUTH_CODE -> {
-                    Text("⏳ Waiting for auth code...", style = LINGOSTypography.bodySmall, color = LINGOSColors.TextSecondary)
-                }
-                AuthStep.CONNECTION_CODE -> {
-                    Text("✅ Auth code verified! Please enter connection code from host screen.", style = LINGOSTypography.bodySmall, color = LINGOSColors.Success)
-                }
+                AuthStep.AUTH_CODE -> Text("⏳ Waiting for auth code...", style = LINGOSTypography.bodySmall, color = LINGOSColors.TextSecondary)
+                AuthStep.CONNECTION_CODE -> Text("✅ Auth code verified! Please enter connection code from host screen.", style = LINGOSTypography.bodySmall, color = LINGOSColors.Success)
             }
         }
     }
@@ -295,20 +285,16 @@ private fun USBConnectionContent(
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(8.dp)),
+            modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp)),
             color = if (isConnected) LINGOSColors.Success.copy(alpha = 0.15f) else LINGOSColors.Disconnected.copy(alpha = 0.15f)
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.Usb, contentDescription = null, tint = if (isConnected) LINGOSColors.Success else LINGOSColors.Disconnected)
+                    Icon(Icons.Default.Usb, null, tint = if (isConnected) LINGOSColors.Success else LINGOSColors.Disconnected)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = if (isConnected) "USB Connected: $device" else "No USB device detected",
@@ -316,14 +302,12 @@ private fun USBConnectionContent(
                         color = if (isConnected) Color.White else LINGOSColors.TextSecondary
                     )
                 }
-                TextButton(onClick = onCheck) {
-                    Text("Refresh", style = LINGOSTypography.labelMedium)
-                }
+                TextButton(onClick = onCheck) { Text("Refresh", style = LINGOSTypography.labelMedium) }
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            "⚠ USB mode is for system debugging and recovery only",
+            text = "⚠ USB mode is for system debugging and recovery only",
             style = LINGOSTypography.bodySmall,
             color = LINGOSColors.Warning,
             modifier = Modifier.padding(bottom = 16.dp)
@@ -342,12 +326,7 @@ private fun USBConnectionContent(
 @Composable
 private fun ScanResultList(devices: List<DetectedDevice>, progress: Int) {
     Column {
-        Text(
-            text = "🔍 Scanning... $progress%",
-            style = LINGOSTypography.labelMedium,
-            color = LINGOSColors.TextSecondary,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
+        Text(text = "🔍 Scanning... $progress%", style = LINGOSTypography.labelMedium, color = LINGOSColors.TextSecondary, modifier = Modifier.padding(bottom = 8.dp))
         if (devices.isNotEmpty()) {
             LazyColumn(
                 modifier = Modifier
@@ -358,23 +337,11 @@ private fun ScanResultList(devices: List<DetectedDevice>, progress: Int) {
             ) {
                 items(devices) { device ->
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(12.dp),
+                        modifier = Modifier.fillMaxWidth().padding(12.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(
-                            text = "${device.ip} ${device.hostname ?: ""}",
-                            style = LINGOSTypography.bodySmall,
-                            color = Color.White
-                        )
-                        if (device.isReachable) {
-                            Text(
-                                text = "✓ Reachable",
-                                style = LINGOSTypography.bodySmall,
-                                color = LINGOSColors.Success
-                            )
-                        }
+                        Text(text = "${device.ip} ${device.hostname ?: ""}", style = LINGOSTypography.bodySmall, color = Color.White)
+                        if (device.isReachable) Text(text = "✓ Reachable", style = LINGOSTypography.bodySmall, color = LINGOSColors.Success)
                     }
                 }
             }
@@ -399,25 +366,12 @@ private fun ConnectionStatusDisplay(state: ConnectState) {
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            modifier = Modifier
-                .size(8.dp)
-                .clip(RoundedCornerShape(50))
-                .background(color)
-        )
+        Box(modifier = Modifier.size(8.dp).clip(RoundedCornerShape(50)).background(color))
         Spacer(modifier = Modifier.width(10.dp))
-        Text(
-            text = text,
-            style = LINGOSTypography.bodySmall,
-            color = Color.White
-        )
+        Text(text = text, style = LINGOSTypography.bodySmall, color = Color.White)
         if (state is ConnectState.Connecting) {
             Spacer(modifier = Modifier.width(8.dp))
-            CircularProgressIndicator(
-                modifier = Modifier.size(16.dp),
-                color = LINGOSColors.AccentRed,
-                strokeWidth = 2.dp
-            )
+            CircularProgressIndicator(modifier = Modifier.size(16.dp), color = LINGOSColors.AccentRed, strokeWidth = 2.dp)
         }
     }
 }

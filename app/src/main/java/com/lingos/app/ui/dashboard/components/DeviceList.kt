@@ -3,6 +3,8 @@ package com.lingos.app.ui.dashboard.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PowerSettingsNew
@@ -22,21 +24,54 @@ import com.lingos.app.ui.theme.LINGOSTypography
 
 @Composable
 fun DeviceList(devices: List<DeviceItem>, onDeviceToggle: (String) -> Unit, modifier: Modifier = Modifier) {
-    LazyColumn(modifier=modifier.fillMaxWidth(), verticalArrangement=Arrangement.spacedBy(4.dp)) {
-        items(devices) { device -> DeviceItemRow(device=device, onToggle={ onDeviceToggle(device.id) }) }
+    LazyColumn(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        items(devices) { device ->
+            DeviceItemRow(device = device, onToggle = { onDeviceToggle(device.id) })
+        }
     }
 }
 
 @Composable
 private fun DeviceItemRow(device: DeviceItem, onToggle: () -> Unit) {
-    Surface(modifier=Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp)), color=LINGOSColors.Surface) {
-        Row(modifier=Modifier.fillMaxWidth().padding(horizontal=12.dp, vertical=10.dp), verticalAlignment=Alignment.CenterVertically, horizontalArrangement=Arrangement.SpaceBetween) {
-            Row(verticalAlignment=Alignment.CenterVertically) {
-                Box(modifier=Modifier.size(8.dp).clip(RoundedCornerShape(50)).background(when (device.status) { DeviceStatus.ONLINE -> LINGOSColors.Success; DeviceStatus.OFFLINE -> LINGOSColors.Disconnected; else -> LINGOSColors.Warning })); Spacer(modifier=Modifier.width(10.dp))
-                Text(text=device.icon, style=LINGOSTypography.titleMedium, modifier=Modifier.padding(end=8.dp))
-                Column { Text(text=device.name, style=LINGOSTypography.bodyMedium, color=Color.White); if (device.ip != null) { Text(text=device.ip, style=LINGOSTypography.labelSmall, color=LINGOSColors.TextHint) } }
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp)),
+        color = LINGOSColors.Surface
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    modifier = Modifier
+                        .size(8.dp)
+                        .clip(RoundedCornerShape(50))
+                        .background(
+                            when (device.status) {
+                                DeviceStatus.ONLINE -> LINGOSColors.Success
+                                DeviceStatus.OFFLINE -> LINGOSColors.Disconnected
+                                else -> LINGOSColors.Warning
+                            }
+                        )
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+                Text(text = device.icon, style = LINGOSTypography.titleMedium, modifier = Modifier.padding(end = 8.dp))
+                Column {
+                    Text(text = device.name, style = LINGOSTypography.bodyMedium, color = Color.White)
+                    if (device.ip != null) {
+                        Text(text = device.ip, style = LINGOSTypography.labelSmall, color = LINGOSColors.TextHint)
+                    }
+                }
             }
-            Icon(imageVector=Icons.Default.PowerSettingsNew, contentDescription="Toggle device", tint=if (device.status == DeviceStatus.ONLINE) LINGOSColors.Success else LINGOSColors.TextHint, modifier=Modifier.size(20.dp).clickable { onToggle() })
+            Icon(
+                Icons.Default.PowerSettingsNew,
+                contentDescription = "Toggle device",
+                tint = if (device.status == DeviceStatus.ONLINE) LINGOSColors.Success else LINGOSColors.TextHint,
+                modifier = Modifier.size(20.dp).clickable { onToggle() }
+            )
         }
     }
 }

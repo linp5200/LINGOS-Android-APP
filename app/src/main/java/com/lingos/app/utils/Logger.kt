@@ -1,13 +1,12 @@
 package com.lingos.app.utils
 
 import android.util.Log
-import com.lingos.app.BuildConfig   // ← 新增导入
+import com.lingos.app.BuildConfig
 
 object Logger {
 
     private val isEnabled: Boolean = BuildConfig.DEBUG
     private var isVerbose: Boolean = BuildConfig.DEBUG
-    private const val LOG_FORMAT = "[%s] %s"
 
     fun setVerbose(verbose: Boolean) {
         isVerbose = verbose
